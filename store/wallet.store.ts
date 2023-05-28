@@ -48,7 +48,7 @@ export const useWalletStore = defineStore("wallet", () => {
   //   const formData = new FormData();
   //   formData.append("first_art", file);
 
-  //   await fetch("https://hoc31.fly.dev/image/", {
+  //   await fetch("https://hoc38.fly.dev/image/", {
   //     method: "POST",
   //     body: formData,
   //   })
@@ -117,7 +117,7 @@ export const useWalletStore = defineStore("wallet", () => {
     let all = { dalle_input: data };
     console.log(JSON.stringify(all));
     try {
-      const response = await fetch("https://hoc31.fly.dev/ai-prompt", {
+      const response = await fetch("https://hoc38.fly.dev/ai-prompt", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -143,7 +143,7 @@ export const useWalletStore = defineStore("wallet", () => {
     const url = `token-ids?wallet=${walletAddress.value}`;
     console.log(url);
     try {
-      const response = await fetch(`https://hoc31.fly.dev/${url}`, {
+      const response = await fetch(`https://hoc38.fly.dev/${url}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -171,7 +171,7 @@ export const useWalletStore = defineStore("wallet", () => {
     const formData = new FormData();
     formData.append("first_art", file);
     try {
-      const response = await fetch("https://hoc31.fly.dev/image/", {
+      const response = await fetch("https://hoc38.fly.dev/image", {
         method: "POST",
         body: formData,
       });
@@ -188,7 +188,7 @@ export const useWalletStore = defineStore("wallet", () => {
         };
         try {
           console.log(JSON.stringify(data));
-          const response = await fetch("https://hoc31.fly.dev/metadata", {
+          const response = await fetch("https://hoc38.fly.dev/metadata", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -230,7 +230,7 @@ export const useWalletStore = defineStore("wallet", () => {
     const formData = new FormData();
     formData.append("first_art", file);
     try {
-      const response = await fetch("https://hoc31.fly.dev/image/", {
+      const response = await fetch("https://hoc38.fly.dev/image", {
         method: "POST",
         body: formData,
       });
@@ -249,7 +249,7 @@ export const useWalletStore = defineStore("wallet", () => {
         console.log(data, "Piotrek");
         try {
           console.log(JSON.stringify(data));
-          const response = await fetch("https://hoc31.fly.dev/metadata", {
+          const response = await fetch("https://hoc38.fly.dev/metadata", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",

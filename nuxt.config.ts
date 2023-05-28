@@ -7,7 +7,9 @@ export default defineNuxtConfig({
       ssr: false,
     },
   ],
+
   app: {
+    baseURL: "/",
     head: {
       charset: "utf-8",
       viewport: "width=device-width, initial-scale=1.0",
@@ -16,6 +18,7 @@ export default defineNuxtConfig({
       link: [],
     },
   },
+
   googleFonts: {
     download: false,
     useStylesheet: true,
@@ -33,6 +36,10 @@ export default defineNuxtConfig({
       language: process.env.LANGUAGE,
       metaTitle: process.env.META_TITLE,
     },
+    // routes: {
+    //   "/": { pretender: true },
+    //   "/*": { cors: true },
+    // },
   },
 
   modules: [
