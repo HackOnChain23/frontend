@@ -9,6 +9,7 @@ export const useWalletStore = defineStore("wallet", () => {
   const loader = useState<boolean>("loader");
   const tokens = useState("tokens");
   const parts = useState("parts");
+  const tokenId = useState("tokenid");
 
   const getWeb3 = async () => {
     return new Promise(async (resolve, reject) => {
@@ -80,7 +81,7 @@ export const useWalletStore = defineStore("wallet", () => {
 
   const join = async (json) => {
     const web3 = new Web3(window.ethereum);
-    let address = "0x5DDdBf0C22d24D0aB4A042afd7bA7e7a2e63e835";
+    let address = "0x15270C90E980aA7aC2c681f3bbFd976cd1cc855e";
     let abi = json;
     let contract = await new web3.eth.Contract(abi, address);
 
@@ -147,7 +148,12 @@ export const useWalletStore = defineStore("wallet", () => {
     }
   };
 
-  const upload = async (file: File): Promise<void> => {
+  const upload = async (
+    file: File,
+    nameNft,
+    descriptionNft,
+    indexNft
+  ): Promise<void> => {
     const formData = new FormData();
     formData.append("first_art", file);
     try {
@@ -159,8 +165,99 @@ export const useWalletStore = defineStore("wallet", () => {
       if (response.ok) {
         const responseBody = await response.json();
         console.log("File uploaded successfully. Response body:", responseBody);
-        const contractId = "0x5DDdBf0C22d24D0aB4A042afd7bA7e7a2e63e835";
-        safeMint(contractId, contractAbi, responseBody.url);
+        const contractId = "0x15270C90E980aA7aC2c681f3bbFd976cd1cc855e";
+        const data = {
+          name: nameNft,
+          description: descriptionNft,
+          image: responseBody.url,
+          position: indexNft,
+        };
+        try {
+          console.log(JSON.stringify(data));
+          const response = await fetch("https://hoc23.fly.dev/metadata", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+          });
+
+          if (response.ok) {
+            const responseBody = await response.json();
+            console.log(
+              "File uploaded successfully. Response body:",
+              responseBody
+            );
+            const contractId = "0x15270C90E980aA7aC2c681f3bbFd976cd1cc855e";
+            console.log(responseBody);
+
+            safeMint(contractId, contractAbi, responseBody);
+          } else {
+            console.error("File upload failed. Status:", response.status);
+          }
+        } catch (error) {
+          console.error("An error occurred during file upload:", error);
+        }
+
+        // safeMint(contractId, contractAbi, responseBody.url);
+      } else {
+        console.error("File upload failed. Status:", response.status);
+      }
+    } catch (error) {
+      console.error("An error occurred during file upload:", error);
+    }
+  };
+
+  const upgrade = async (
+    file: File | string,
+    indexNft,
+    tokenId
+  ): Promise<void> => {
+    const formData = new FormData();
+    formData.append("first_art", file);
+    try {
+      const response = await fetch("https://hoc23.fly.dev/image/", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (response.ok) {
+        const responseBody = await response.json();
+        console.log("File uploaded successfully. Response body:", responseBody);
+        const contractId = "0x15270C90E980aA7aC2c681f3bbFd976cd1cc855e";
+        const data = {
+          image: responseBody.url,
+          position: indexNft,
+          token_id: tokenId,
+        };
+        try {
+          console.log(JSON.stringify(data));
+          const response = await fetch("https://hoc23.fly.dev/metadata", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+          });
+
+          if (response.ok) {
+            const responseBody = await response.json();
+            console.log(
+              "File uploaded successfully. Response body:",
+              responseBody
+            );
+            const contractId = "0x15270C90E980aA7aC2c681f3bbFd976cd1cc855e";
+            console.log(responseBody);
+
+            safeMint(contractId, contractAbi, responseBody);
+          } else {
+            console.error("File upload failed. Status:", response.status);
+          }
+        } catch (error) {
+          console.error("An error occurred during file upload:", error);
+        }
+
+        // safeMint(contractId, contractAbi, responseBody.url);
       } else {
         console.error("File upload failed. Status:", response.status);
       }
@@ -171,6 +268,7 @@ export const useWalletStore = defineStore("wallet", () => {
 
   return {
     upload,
+    upgrade,
     getWeb3,
     getTokens,
     askAi,
@@ -178,6 +276,7 @@ export const useWalletStore = defineStore("wallet", () => {
     connectWallet,
     join,
     callSmartContract,
+    tokenId,
     walletAddress,
     tokens,
     parts,

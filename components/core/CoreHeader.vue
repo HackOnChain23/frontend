@@ -66,7 +66,7 @@ const contact = () => {
     .then(() => {
       store.getTokens().then((res) => {
         store.tokens = res;
-        store.parts = fakeData[0].parts;
+        // store.parts = fakeData[0].parts;
       });
     });
 };

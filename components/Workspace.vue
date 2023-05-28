@@ -23,6 +23,7 @@
                   type="text"
                   class="w-full text-white bg-black p-2"
                   placeholder="Name..."
+                  v-model="name"
                 />
               </div>
               <div class="flex w-full border border-blue-500">
@@ -30,6 +31,7 @@
                   type="text"
                   class="w-full text-white bg-black p-2"
                   placeholder="Description..."
+                  v-model="description"
                 />
               </div>
             </div>
@@ -219,6 +221,9 @@ import { useWalletStore } from "~/store/wallet.store";
 const loader = useState<boolean>("loader");
 const store = useWalletStore();
 const aiInput = ref<string>("");
+const name = ref();
+const description = ref();
+const chosenPhotoIndex = ref();
 
 interface IPreview {
   src: string | undefined;
@@ -260,7 +265,26 @@ const sendPhoto = () => {
   if (fileToSend != undefined) {
     let promise = new Promise((r) => {
       loader.value = true;
-      r(store.upload(fileToSend));
+      r(
+        store.upload(
+          fileToSend,
+          name.value,
+          description.value,
+          chosenPhotoIndex.value
+        )
+      );
+    });
+  } else {
+    let promise = new Promise((r) => {
+      loader.value = true;
+      r(
+        store.upload(
+          chosenPhoto.value,
+          name.value,
+          description.value,
+          chosenPhotoIndex.value
+        )
+      );
     });
   }
 };
@@ -279,7 +303,8 @@ const deletePhoto = (index?) => {
   fileToSend = undefined;
 };
 const previewPhoto = (e, photoIndex) => {
-  console.log(photoIndex);
+  console.log(photoIndex, "indeeeeeex");
+  chosenPhotoIndex.value = photoIndex;
   if (chosenPhoto.value.length > 0) {
     photosToPreview.value[photoIndex].src = chosenPhoto.value;
     photoToUpload.value = chosenPhoto.value;

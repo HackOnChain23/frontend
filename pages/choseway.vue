@@ -80,7 +80,7 @@
               >
                 <li
                   class="cursor-pointer space-y-2"
-                  v-for="elem in fakeData"
+                  v-for="elem in store.tokens"
                   @click="changeOption(elem)"
                 >
                   <div class="flex justify-between items-center px-4 py-1">
@@ -121,6 +121,7 @@ const join = () => {
 };
 
 const changeOption = (elem) => {
+  store.tokenId = elem.id;
   store.parts = elem.parts;
   chosenOption.value = elem.name;
   dropdownState();

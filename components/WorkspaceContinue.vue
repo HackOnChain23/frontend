@@ -206,6 +206,8 @@ import { useWalletStore } from "~/store/wallet.store";
 const loader = useState<boolean>("loader");
 const store = useWalletStore();
 const aiInput = ref<string>("");
+const tokenId = useState("tokenid");
+const chosenPhotoIndex = ref();
 
 interface IPreview {
   src: string | undefined;
@@ -252,7 +254,14 @@ const sendPhoto = () => {
   if (fileToSend != undefined) {
     let promise = new Promise((r) => {
       loader.value = true;
-      r(store.upload(fileToSend));
+      r(store.upgrade(fileToSend, chosenPhotoIndex.value, tokenId.value));
+    });
+  } else {
+    let promise = new Promise((r) => {
+      loader.value = true;
+      r(
+        store.upgrade(chosenPhoto.value, chosenPhotoIndex.value, tokenId.value)
+      );
     });
   }
 };
@@ -273,6 +282,7 @@ const deletePhoto = (index?) => {
 };
 const previewPhoto = (e, photoIndex) => {
   console.log(photoIndex);
+  chosenPhotoIndex.value = photoIndex;
   if (chosenPhoto.value.length > 0) {
     photosToPreview.value[photoIndex].src = chosenPhoto.value;
     photoToUpload.value = chosenPhoto.value;
