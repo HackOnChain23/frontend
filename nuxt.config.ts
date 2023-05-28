@@ -11,8 +11,9 @@ export default defineNuxtConfig({
     head: {
       charset: "utf-8",
       viewport: "width=device-width, initial-scale=1.0",
-      title: "PSPLS Test Project",
-      meta: [{ name: "description", content: "content" }],
+      title: "Block Artistry",
+      meta: [{ name: "Block Artistry is an innovative, digital multiplayer game that merges the world of art, blockchain, and NFTs. Here, every player contributes to a shared artistic endeavor, adding their creative block to a common 2x3 grid. This forms a constantly evolving digital canvas where individual creativity and collective vision come together.",
+      content: "https://bafkreibjuf7d42m3iy3jjrunm7qr46ovbjzlmsaq35dsxyz2jvzisei6xm.ipfs.nftstorage.link/" }],
       link: [],
     },
   },
