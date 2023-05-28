@@ -48,7 +48,7 @@ export const useWalletStore = defineStore("wallet", () => {
   //   const formData = new FormData();
   //   formData.append("first_art", file);
 
-  //   await fetch("https://hoc23.fly.dev/image/", {
+  //   await fetch("https://hoc24.fly.dev/image/", {
   //     method: "POST",
   //     body: formData,
   //   })
@@ -56,8 +56,9 @@ export const useWalletStore = defineStore("wallet", () => {
   //       console.log(response);
   //     })
   // };
+  const router = useRouter();
 
-  const safeMint = async (contractAddress, json, url) => {
+  const safeMintNft = async (contractAddress, json, url, index) => {
     const web3 = new Web3(window.ethereum);
     let address = contractAddress;
     let abi = json;
@@ -67,27 +68,40 @@ export const useWalletStore = defineStore("wallet", () => {
       .then((res) => {
         console.log(res, "estimate");
       });
-
+    const indexRender = index;
+    console.log(indexRender, "hiahiahaiahi");
     contract.methods
-      .safeMint(walletAddress.value, "image", url, 6, 1)
+      .safeMint(walletAddress.value, "image", url, 6, indexRender)
       .send({ from: walletAddress.value, gas: 5000000 })
       .then((result) => {
         console.log(result);
+        loader.value = false;
+        router.push("/");
       })
       .catch(() => {
         loader.value = false;
       });
   };
 
-  const join = async (json) => {
+  const join = async (json, url, position, id) => {
     const web3 = new Web3(window.ethereum);
-    let address = "0x15270C90E980aA7aC2c681f3bbFd976cd1cc855e";
+    let address = "0x49a985C23CEda09d42AB7e4e3F78718404834b73";
     let abi = json;
     let contract = await new web3.eth.Contract(abi, address);
-
+    console.log(
+      json,
+      abi,
+      walletAddress.value,
+      url,
+      position,
+      id,
+      typeof position,
+      typeof id,
+      "Lechu to dla Ciebie"
+    );
+    web3.eth.estimateGas({ from: walletAddress.value, gas: 5000000 });
     contract.methods
-      .initRewardContract(address)
-      .addPart(walletAddress.value, "image", 4, 1)
+      .addPart(walletAddress.value, url, position, id)
       .send({ from: walletAddress.value, gas: 5000000 })
       .then((result) => {
         console.log(result);
@@ -103,7 +117,7 @@ export const useWalletStore = defineStore("wallet", () => {
     let all = { dalle_input: data };
     console.log(JSON.stringify(all));
     try {
-      const response = await fetch("https://hoc23.fly.dev/ai-prompt", {
+      const response = await fetch("https://hoc24.fly.dev/ai-prompt", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -129,7 +143,7 @@ export const useWalletStore = defineStore("wallet", () => {
     const url = `token-ids?wallet=${walletAddress.value}`;
     console.log(url);
     try {
-      const response = await fetch(`https://hoc23.fly.dev/${url}`, {
+      const response = await fetch(`https://hoc24.fly.dev/${url}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -157,7 +171,7 @@ export const useWalletStore = defineStore("wallet", () => {
     const formData = new FormData();
     formData.append("first_art", file);
     try {
-      const response = await fetch("https://hoc23.fly.dev/image/", {
+      const response = await fetch("https://hoc24.fly.dev/image/", {
         method: "POST",
         body: formData,
       });
@@ -165,7 +179,7 @@ export const useWalletStore = defineStore("wallet", () => {
       if (response.ok) {
         const responseBody = await response.json();
         console.log("File uploaded successfully. Response body:", responseBody);
-        const contractId = "0x15270C90E980aA7aC2c681f3bbFd976cd1cc855e";
+        const contractId = "0x49a985C23CEda09d42AB7e4e3F78718404834b73";
         const data = {
           name: nameNft,
           description: descriptionNft,
@@ -174,7 +188,7 @@ export const useWalletStore = defineStore("wallet", () => {
         };
         try {
           console.log(JSON.stringify(data));
-          const response = await fetch("https://hoc23.fly.dev/metadata", {
+          const response = await fetch("https://hoc24.fly.dev/metadata", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -188,10 +202,10 @@ export const useWalletStore = defineStore("wallet", () => {
               "File uploaded successfully. Response body:",
               responseBody
             );
-            const contractId = "0x15270C90E980aA7aC2c681f3bbFd976cd1cc855e";
+            const contractId = "0x49a985C23CEda09d42AB7e4e3F78718404834b73";
             console.log(responseBody);
 
-            safeMint(contractId, contractAbi, responseBody);
+            safeMintNft(contractId, contractAbi, responseBody, indexNft);
           } else {
             console.error("File upload failed. Status:", response.status);
           }
@@ -216,7 +230,7 @@ export const useWalletStore = defineStore("wallet", () => {
     const formData = new FormData();
     formData.append("first_art", file);
     try {
-      const response = await fetch("https://hoc23.fly.dev/image/", {
+      const response = await fetch("https://hoc24.fly.dev/image/", {
         method: "POST",
         body: formData,
       });
@@ -224,15 +238,18 @@ export const useWalletStore = defineStore("wallet", () => {
       if (response.ok) {
         const responseBody = await response.json();
         console.log("File uploaded successfully. Response body:", responseBody);
-        const contractId = "0x15270C90E980aA7aC2c681f3bbFd976cd1cc855e";
+        const contractId = "0x49a985C23CEda09d42AB7e4e3F78718404834b73";
         const data = {
           image: responseBody.url,
+          name: "string",
+          description: "string",
           position: indexNft,
           token_id: tokenId,
         };
+        console.log(data, "Piotrek");
         try {
           console.log(JSON.stringify(data));
-          const response = await fetch("https://hoc23.fly.dev/metadata", {
+          const response = await fetch("https://hoc24.fly.dev/metadata", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -246,10 +263,10 @@ export const useWalletStore = defineStore("wallet", () => {
               "File uploaded successfully. Response body:",
               responseBody
             );
-            const contractId = "0x15270C90E980aA7aC2c681f3bbFd976cd1cc855e";
+            const contractId = "0x49a985C23CEda09d42AB7e4e3F78718404834b73";
             console.log(responseBody);
 
-            safeMint(contractId, contractAbi, responseBody);
+            join(contractAbi, responseBody, indexNft, tokenId);
           } else {
             console.error("File upload failed. Status:", response.status);
           }
@@ -272,7 +289,7 @@ export const useWalletStore = defineStore("wallet", () => {
     getWeb3,
     getTokens,
     askAi,
-    safeMint,
+    safeMintNft,
     connectWallet,
     join,
     callSmartContract,
