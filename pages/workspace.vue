@@ -12,10 +12,14 @@
       </p>
     </div>
     <div v-if="walletId">
-      <Workspace />
+      <Workspace v-if="!store.parts" />
+      <WorkspaceContinue v-if="store.parts" />
     </div>
   </section>
 </template>
 <script setup lang="ts">
 const walletId = useState<string>("walletAddress");
+
+import { useWalletStore } from "~/store/wallet.store";
+const store = useWalletStore();
 </script>

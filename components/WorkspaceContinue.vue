@@ -14,61 +14,42 @@
               Select an empty block and add your piece by clicking on it.
             </p>
 
-            <div
-              v-if="!store.parts"
-              class="h-auto flex w-full bg-black space-y-4 flex-col"
-            >
-              <div class="flex w-full border border-blue-500">
-                <input
-                  type="text"
-                  class="w-full text-white bg-black p-2"
-                  placeholder="Name..."
-                />
-              </div>
-              <div class="flex w-full border border-blue-500">
-                <input
-                  type="text"
-                  class="w-full text-white bg-black p-2"
-                  placeholder="Description..."
-                />
-              </div>
-            </div>
             <!-- <p class="text-white w-8/12 text-center">
-              The photo in the preview will be added as the first or next block
-              in the grid.
-            </p>
-            <label
-              for="files"
-              class="px-6 w-auto h-min py-2 rounded-sm shadow-sm shadow-blue-500 bg-violet_gradient"
-              >Preview block</label
-            >
-            <input
-              @change="previewPhoto($event)"
-              id="files"
-              type="file"
-              class="hidden"
-              text="chose"
-            /> -->
+                The photo in the preview will be added as the first or next block
+                in the grid.
+              </p>
+              <label
+                for="files"
+                class="px-6 w-auto h-min py-2 rounded-sm shadow-sm shadow-blue-500 bg-violet_gradient"
+                >Preview block</label
+              >
+              <input
+                @change="previewPhoto($event)"
+                id="files"
+                type="file"
+                class="hidden"
+                text="chose"
+              /> -->
           </div>
           <!-- <div
-            class="h-full w-1/2 justify-center items-center"
-            :class="{ flex: photoToUpload, hidden: !photoToUpload }"
-          >
-            <div class="w-full h-full flex items-center p-4 justify-center">
-              <p class="hidden">Preview</p>
-              <div
-                class="w-full h-full p-4 border-2 relative border-blue-500 rounded-lg"
-              >
+              class="h-full w-1/2 justify-center items-center"
+              :class="{ flex: photoToUpload, hidden: !photoToUpload }"
+            >
+              <div class="w-full h-full flex items-center p-4 justify-center">
+                <p class="hidden">Preview</p>
                 <div
-                  @click="deletePhoto()"
-                  class="absolute w-8 h-8 cursor-pointer rounded-full bg-white text-black font-bold flex items-center justify-center right-0 top-0"
+                  class="w-full h-full p-4 border-2 relative border-blue-500 rounded-lg"
                 >
-                  X
+                  <div
+                    @click="deletePhoto()"
+                    class="absolute w-8 h-8 cursor-pointer rounded-full bg-white text-black font-bold flex items-center justify-center right-0 top-0"
+                  >
+                    X
+                  </div>
+                  <img class="w-full h-full object-cover" :src="photoToUpload" />
                 </div>
-                <img class="w-full h-full object-cover" :src="photoToUpload" />
               </div>
-            </div>
-          </div> -->
+            </div> -->
         </div>
         <div class="mt-4">
           <p class="text-white mb-2 text-left">
@@ -150,6 +131,9 @@
           >
             <form v-if="chosenPhoto.length == 0" enctype="multipart/form-data">
               <label
+                v-if="
+                  photosToPreview[index].src == undefined && aiState == false
+                "
                 :for="photo"
                 class="px-10 w-auto h-auto cursor-pointer hover:text-white py-4 rounded-sm shadow-sm shadow-blue-500 bg-violet_gradient"
                 :class="{ hidden: photoToUpload }"
@@ -163,7 +147,9 @@
                 class="hidden inputButton"
               />
             </form>
-            <form v-if="chosenPhoto.length > 0">
+            <form
+              v-if="photosToPreview[index].src == undefined && aiState == true"
+            >
               <div
                 class="px-10 w-auto animate-bounce h-auto cursor-pointer hover:text-white py-4 rounded-sm shadow-sm shadow-blue-500 bg-violet_gradient"
                 :class="{ hidden: photoToUpload }"
@@ -185,6 +171,7 @@
                   class="w-full h-full border-2 relative border-blue-500 rounded-lg"
                 >
                   <div
+                    v-if="!store.parts.includes(photosToPreview[index].src)"
                     @click="deletePhoto(index)"
                     class="absolute w-8 h-8 cursor-pointer rounded-full bg-white text-black font-bold flex items-center justify-center right-0 top-0"
                   >
@@ -232,13 +219,17 @@ const photosToPreview = ref<IPreview[]>([
   { src: undefined },
 ]);
 
-// onMounted(() => {
-//   if (store.parts) {
-//     Object.values(store.parts).forEach((photo, index) => {
-//       photosToPreview.value[index].src = photo;
-//     });
-//   }
-// });
+onMounted(() => {
+  if (store.parts) {
+    Object.values(store.parts).forEach((photo, index) => {
+      if (photo.length > 0) {
+        photosToPreview.value[index].src = photo;
+      } else {
+        photosToPreview.value[index].src = undefined;
+      }
+    });
+  }
+});
 
 const aiState = ref<boolean>(false);
 const input = ref();
@@ -252,7 +243,8 @@ let fileToSend: EventTarget | undefined;
 
 const chosenPhoto = ref<string>("");
 const choosePhoto = (index: number) => {
-  deletePhoto();
+  // deletePhoto();
+  // photosToPreview.value[index].src = photos[index];
   chosenPhoto.value = photos[index];
 };
 
@@ -266,6 +258,7 @@ const sendPhoto = () => {
 };
 
 const exampleOutput = ["1", "2", "3", "4", "5", "6"];
+
 const deletePhoto = (index?) => {
   photoToUpload.value = undefined;
   console.log(index);

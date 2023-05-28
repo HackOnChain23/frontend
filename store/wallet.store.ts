@@ -7,6 +7,8 @@ export const useWalletStore = defineStore("wallet", () => {
   const contractResult = useState<string>("contractResult");
   const connected = useState<boolean>("connected");
   const loader = useState<boolean>("loader");
+  const tokens = useState("tokens");
+  const parts = useState("parts");
 
   const getWeb3 = async () => {
     return new Promise(async (resolve, reject) => {
@@ -78,7 +80,7 @@ export const useWalletStore = defineStore("wallet", () => {
 
   const join = async (json) => {
     const web3 = new Web3(window.ethereum);
-    let address = "0x7176Dfd8bAF2C390a7168CdCE567869C333Ec9E2";
+    let address = "0x5DDdBf0C22d24D0aB4A042afd7bA7e7a2e63e835";
     let abi = json;
     let contract = await new web3.eth.Contract(abi, address);
 
@@ -96,6 +98,55 @@ export const useWalletStore = defineStore("wallet", () => {
       });
   };
 
+  const askAi = async (data: string): Promise<void> => {
+    let all = { dalle_input: data };
+    console.log(JSON.stringify(all));
+    try {
+      const response = await fetch("https://hoc23.fly.dev/ai-prompt", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(all),
+      });
+      console.log("Server response:", response);
+
+      if (response.ok) {
+        const responseBody = await response.json();
+        console.log("File uploaded successfully. Response body:", responseBody);
+        console.log(responseBody);
+        return responseBody;
+      } else {
+        console.error("File upload failed. Status:", response.status);
+      }
+    } catch (error) {
+      console.error("An error occurred during file upload:", error);
+    }
+  };
+
+  const getTokens = async (): Promise<void> => {
+    const url = `token-ids?wallet=${walletAddress.value}`;
+    console.log(url);
+    try {
+      const response = await fetch(`https://hoc23.fly.dev/${url}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (response.ok) {
+        const responseBody = await response.json();
+        console.log("File uploaded successfully. Response body:", responseBody);
+        return responseBody;
+      } else {
+        console.error("File upload failed. Status:", response.status);
+      }
+    } catch (error) {
+      console.error("An error occurred during file upload:", error);
+    }
+  };
+
   const upload = async (file: File): Promise<void> => {
     const formData = new FormData();
     formData.append("first_art", file);
@@ -108,7 +159,7 @@ export const useWalletStore = defineStore("wallet", () => {
       if (response.ok) {
         const responseBody = await response.json();
         console.log("File uploaded successfully. Response body:", responseBody);
-        const contractId = "0x1453accea19e405C3affa33321aB0F3daB580b53";
+        const contractId = "0x5DDdBf0C22d24D0aB4A042afd7bA7e7a2e63e835";
         safeMint(contractId, contractAbi, responseBody.url);
       } else {
         console.error("File upload failed. Status:", response.status);
@@ -121,10 +172,14 @@ export const useWalletStore = defineStore("wallet", () => {
   return {
     upload,
     getWeb3,
+    getTokens,
+    askAi,
     safeMint,
     connectWallet,
     join,
     callSmartContract,
     walletAddress,
+    tokens,
+    parts,
   };
 });

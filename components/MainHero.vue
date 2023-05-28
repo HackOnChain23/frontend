@@ -1,6 +1,6 @@
 <template>
   <section
-    class="h-[35rem] container mx-auto bg-transparent pointer-event-none"
+    class="h-[30rem] container mx-auto bg-transparent pointer-event-none"
   >
     <div
       class="w-full h-auto bg-transparent pointer-event-none fixed duration-500 top-0"
@@ -23,7 +23,7 @@
     </div>
 
     <div
-      class="w-full h-auto pointer-event-auto bg-transparent drop-shadow-2xl flex items-center justify-center flex-col z-50 pt-60"
+      class="w-full h-auto pointer-event-auto bg-transparent drop-shadow-2xl flex items-center justify-center flex-col z-50 pt-40"
     >
       <h1
         class="text-6xl h-32 z-10 font-bold tracking-[-.3rem] text-white mb-4 text-stroke text-center text-white"

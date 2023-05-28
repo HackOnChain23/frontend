@@ -5,7 +5,7 @@ export default {
     if (to.hash || to.path == from.path) {
       if (to.hash === "") return;
       const el = document.querySelector(to.hash);
-      return { top: el.offsetTop - 70, left: 0, behavior: "smooth" };
+      return { top: el.offsetTop - 100, left: 0, behavior: "smooth" };
     }
 
     return {

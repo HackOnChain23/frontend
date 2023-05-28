@@ -1,6 +1,6 @@
 <template>
   <div
-    class="container w-full h-full mx-auto absolute bg-black/80 backdrop-blur-xl z-50"
+    class="container w-full h-full mx-auto absolute bg-black/80 backdrop-blur-sm z-50"
   >
     <h1
       class="text-4xl w-auto h-20 text-center relative top-1/2 mt-20 text-cyan_gradient font-bold mb-4 font-mono"

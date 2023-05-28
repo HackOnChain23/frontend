@@ -52,6 +52,7 @@
 </template>
 <script setup lang="ts">
 import { useWalletStore } from "~/store/wallet.store";
+import fakeData from "~/data/token.json";
 
 const buttonState = ref("Connect to wallet");
 const walletId = useState<string>("walletAddress");
@@ -61,7 +62,13 @@ const store = useWalletStore();
 const contact = () => {
   store
     .connectWallet()
-    .then(() => (shortId.value = walletId.value.slice(0, 10)));
+    .then(() => (shortId.value = walletId.value.slice(0, 10)))
+    .then(() => {
+      store.getTokens().then((res) => {
+        store.tokens = res;
+        store.parts = fakeData[0].parts;
+      });
+    });
 };
 
 const scrolled = ref<boolean>(true);
