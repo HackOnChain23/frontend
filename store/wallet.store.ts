@@ -10,6 +10,7 @@ export const useWalletStore = defineStore("wallet", () => {
   const tokens = useState("tokens");
   const parts = useState("parts");
   const tokenId = useState("tokenid");
+  const config = useRuntimeConfig();
 
   const getWeb3 = async () => {
     return new Promise(async (resolve, reject) => {
@@ -48,7 +49,7 @@ export const useWalletStore = defineStore("wallet", () => {
   //   const formData = new FormData();
   //   formData.append("first_art", file);
 
-  //   await fetch("https://hoc38.fly.dev/image/", {
+  //   await fetch("${config.public.apiUrl}/image/", {
   //     method: "POST",
   //     body: formData,
   //   })
@@ -68,8 +69,16 @@ export const useWalletStore = defineStore("wallet", () => {
       .then((res) => {
         console.log(res, "estimate");
       });
-    const indexRender = index;
+    const indexRender = index + 1;
     console.log(indexRender, "hiahiahaiahi");
+    console.log(
+      walletAddress.value,
+      "image",
+      url,
+      6,
+      indexRender,
+      "params for safeMint"
+    );
     contract.methods
       .safeMint(walletAddress.value, "image", url, 6, indexRender)
       .send({ from: walletAddress.value, gas: 5000000 })
@@ -78,14 +87,15 @@ export const useWalletStore = defineStore("wallet", () => {
         loader.value = false;
         router.push("/");
       })
-      .catch(() => {
+      .catch((error) => {
+        console.error(error);
         loader.value = false;
       });
   };
 
   const join = async (json, url, position, id) => {
     const web3 = new Web3(window.ethereum);
-    let address = "0x49a985C23CEda09d42AB7e4e3F78718404834b73";
+    let address = "0x7d4c7E53523f73467cA924DE491fb2f766AecF73";
     let abi = json;
     let contract = await new web3.eth.Contract(abi, address);
     console.log(
@@ -114,10 +124,10 @@ export const useWalletStore = defineStore("wallet", () => {
   };
 
   const askAi = async (data: string): Promise<void> => {
-    let all = { dalle_input: data };
+    let all = { prompt: data };
     console.log(JSON.stringify(all));
     try {
-      const response = await fetch("https://hoc38.fly.dev/ai-prompt", {
+      const response = await fetch(`${config.public.apiUrl}/ai-generate`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -143,7 +153,7 @@ export const useWalletStore = defineStore("wallet", () => {
     const url = `token-ids?wallet=${walletAddress.value}`;
     console.log(url);
     try {
-      const response = await fetch(`https://hoc38.fly.dev/${url}`, {
+      const response = await fetch(`${config.public.apiUrl}/${url}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -171,7 +181,7 @@ export const useWalletStore = defineStore("wallet", () => {
     const formData = new FormData();
     formData.append("first_art", file);
     try {
-      const response = await fetch("https://hoc38.fly.dev/image", {
+      const response = await fetch(`${config.public.apiUrl}/image`, {
         method: "POST",
         body: formData,
       });
@@ -179,16 +189,16 @@ export const useWalletStore = defineStore("wallet", () => {
       if (response.ok) {
         const responseBody = await response.json();
         console.log("File uploaded successfully. Response body:", responseBody);
-        const contractId = "0x49a985C23CEda09d42AB7e4e3F78718404834b73";
+        const contractId = "0x7d4c7E53523f73467cA924DE491fb2f766AecF73";
         const data = {
           name: nameNft,
           description: descriptionNft,
           image: responseBody.url,
-          position: indexNft,
+          position: indexNft + 1,
         };
         try {
-          console.log(JSON.stringify(data));
-          const response = await fetch("https://hoc38.fly.dev/metadata", {
+          console.log(JSON.stringify(data), typeof data.position);
+          const response = await fetch(`${config.public.apiUrl}/mint`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -202,7 +212,7 @@ export const useWalletStore = defineStore("wallet", () => {
               "File uploaded successfully. Response body:",
               responseBody
             );
-            const contractId = "0x49a985C23CEda09d42AB7e4e3F78718404834b73";
+            const contractId = "0x7d4c7E53523f73467cA924DE491fb2f766AecF73";
             console.log(responseBody);
 
             safeMintNft(contractId, contractAbi, responseBody, indexNft);
@@ -230,7 +240,7 @@ export const useWalletStore = defineStore("wallet", () => {
     const formData = new FormData();
     formData.append("first_art", file);
     try {
-      const response = await fetch("https://hoc38.fly.dev/image", {
+      const response = await fetch(`${config.public.apiUrl}/image`, {
         method: "POST",
         body: formData,
       });
@@ -238,7 +248,7 @@ export const useWalletStore = defineStore("wallet", () => {
       if (response.ok) {
         const responseBody = await response.json();
         console.log("File uploaded successfully. Response body:", responseBody);
-        const contractId = "0x49a985C23CEda09d42AB7e4e3F78718404834b73";
+        const contractId = "0x7d4c7E53523f73467cA924DE491fb2f766AecF73";
         const data = {
           image: responseBody.url,
           name: "string",
@@ -249,7 +259,7 @@ export const useWalletStore = defineStore("wallet", () => {
         console.log(data, "Piotrek");
         try {
           console.log(JSON.stringify(data));
-          const response = await fetch("https://hoc38.fly.dev/metadata", {
+          const response = await fetch(`${config.public.apiUrl}/metadata`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -263,7 +273,7 @@ export const useWalletStore = defineStore("wallet", () => {
               "File uploaded successfully. Response body:",
               responseBody
             );
-            const contractId = "0x49a985C23CEda09d42AB7e4e3F78718404834b73";
+            const contractId = "0x7d4c7E53523f73467cA924DE491fb2f766AecF73";
             console.log(responseBody);
 
             join(contractAbi, responseBody, indexNft, tokenId);

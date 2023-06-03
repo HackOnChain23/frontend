@@ -328,8 +328,8 @@ const ai = () => {
   loader.value = true;
   store.askAi(aiInput.value).then((res) => {
     photos = [];
-    res.data.forEach((elem) => {
-      photos.push(elem.url);
+    res.forEach((elem) => {
+      photos.push(elem);
     });
     loader.value = false;
     console.log(res.data, "comp");

@@ -35,6 +35,7 @@ export default defineNuxtConfig({
     public: {
       language: process.env.LANGUAGE,
       metaTitle: process.env.META_TITLE,
+      apiUrl: process.env.API_URL,
     },
     // routes: {
     //   "/": { pretender: true },

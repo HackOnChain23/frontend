@@ -21,6 +21,8 @@ declare module 'nuxt/schema' {
    language: string,
 
    metaTitle: string,
+
+   apiUrl: string,
   }
 }
 declare module 'vue' {
