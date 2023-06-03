@@ -63,23 +63,15 @@ export const useWalletStore = defineStore("wallet", () => {
     const web3 = new Web3(window.ethereum);
     let address = contractAddress;
     let abi = json;
-    let contract = await new web3.eth.Contract(abi, address);
-    web3.eth
-      .estimateGas({ from: walletAddress.value, gas: 5000000 })
-      .then((res) => {
-        console.log(res, "estimate");
-      });
     const indexRender = index + 1;
-    console.log(indexRender, "hiahiahaiahi");
-    console.log(
-      walletAddress.value,
-      "image",
-      url,
-      6,
-      indexRender,
-      "params for safeMint"
-    );
-    contract.methods
+    const contract = await new web3.eth.Contract(abi, address);
+    await web3.eth
+      .estimateGas({ from: walletAddress.value, gas: 5000000 })
+      .then(() => {
+        console.log("estimateGas");
+      });
+
+    await contract.methods
       .safeMint(walletAddress.value, "image", url, 6, indexRender)
       .send({ from: walletAddress.value, gas: 5000000 })
       .then((result) => {
@@ -95,7 +87,7 @@ export const useWalletStore = defineStore("wallet", () => {
 
   const join = async (json, url, position, id) => {
     const web3 = new Web3(window.ethereum);
-    let address = "0x7d4c7E53523f73467cA924DE491fb2f766AecF73";
+    let address = config.public.smartContractAddress;
     let abi = json;
     let contract = await new web3.eth.Contract(abi, address);
     console.log(
@@ -189,7 +181,7 @@ export const useWalletStore = defineStore("wallet", () => {
       if (response.ok) {
         const responseBody = await response.json();
         console.log("File uploaded successfully. Response body:", responseBody);
-        const contractId = "0x7d4c7E53523f73467cA924DE491fb2f766AecF73";
+        const contractId = config.public.smartContractAddress;
         const data = {
           name: nameNft,
           description: descriptionNft,
@@ -212,7 +204,7 @@ export const useWalletStore = defineStore("wallet", () => {
               "File uploaded successfully. Response body:",
               responseBody
             );
-            const contractId = "0x7d4c7E53523f73467cA924DE491fb2f766AecF73";
+            const contractId = config.public.smartContractAddress;
             console.log(responseBody);
 
             safeMintNft(contractId, contractAbi, responseBody, indexNft);
@@ -248,7 +240,7 @@ export const useWalletStore = defineStore("wallet", () => {
       if (response.ok) {
         const responseBody = await response.json();
         console.log("File uploaded successfully. Response body:", responseBody);
-        const contractId = "0x7d4c7E53523f73467cA924DE491fb2f766AecF73";
+        const contractId = config.public.smartContractAddress;
         const data = {
           image: responseBody.url,
           name: "string",
@@ -273,7 +265,7 @@ export const useWalletStore = defineStore("wallet", () => {
               "File uploaded successfully. Response body:",
               responseBody
             );
-            const contractId = "0x7d4c7E53523f73467cA924DE491fb2f766AecF73";
+            const contractId = config.public.smartContractAddress;
             console.log(responseBody);
 
             join(contractAbi, responseBody, indexNft, tokenId);
