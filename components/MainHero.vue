@@ -84,7 +84,6 @@ import { useWalletStore } from "~/store/wallet.store";
 
 const walletId = useState<string>("walletAddress");
 const scrolled = ref<boolean>(true);
-const store = useWalletStore();
 
 const scrollState = (): void => {
   scrolled.value = window.scrollY > 0 ? true : false;
